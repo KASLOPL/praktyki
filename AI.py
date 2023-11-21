@@ -6,157 +6,114 @@ class Data():
     # Tablica z całą planszą
     board = ["", "", "", "", "", "", "", "", ""]
 
-    # Funkcja imortująca kliknięcia z pliku main
     def data(self, btn_s, x_o):
+        '''Metoda zapisuje ruch gracza do listy'''
         move = self.switch(btn_s)
-        self.writing(move, x_o)
-
-    # Funkcja przypisująca wykonane ruchy do tablicy board
-    def writing(self, move, x_o):
         self.board[move-1] = x_o
-        print(self.board)
 
-    # Funkcja wywołująca funkcje która zwraca na którym polu ma zostać postawiony znak
     def move(self, x_or_o):
-        print(x_or_o)
-        move = MiniMax_AI().best_move(self.board, x_or_o)
+        '''Metoda wywołuje Klase MiniMax i zapisująca ruch do listy'''
+        move = MiniMaxAI().get_best_move(self.board, x_or_o)
         self.board[move-1]= x_or_o
-        print(self.board)
         return move
 
-    # Funkcja resetująca tablice "board"
     def restart(self):
+        '''Metoda czyści tablice z planszą'''
         for x in range(9):
             self.board[x]= ""
 
-    # Funkcja zmieniająca np. "btn1" na 1
     def switch(self, btn):
-        if btn=="btn1":
-            return 1
-        if btn=="btn2":
-            return 2
-        if btn=="btn3":
-            return 3
-        if btn=="btn4":
-            return 4
-        if btn=="btn5":
-            return 5
-        if btn=="btn6":
-            return 6
-        if btn=="btn7":
-            return 7
-        if btn=="btn8":
-            return 8
-        if btn=="btn9":
-            return 9
+        '''Metoda zwraca id przycisku na podstawie stringa np: btn3 zwraca 3'''
+        return int(btn[3])
 
-# Główna klasa zawierająca cały kod algorytmu MiniMax (AI)   
-class MiniMax_AI():
+class MiniMaxAI():
+    '''Klasa zawierająca metody które zwracają najlepszy ruch w danej pozycji'''
 
-    # Funkcja określa kto gra którym znakiem
-    def HumanAI(self, x_or_o):
-        
+    def human_ai(self, x_or_o):
+        '''Metoda zwraca symbol którym gra grasz oraz którym gra AI'''
+
         if x_or_o == "X":
+            ai_player = "X"
+            human_player = "O"
 
-            AIPlayer = "X"
-            HumanPlayer = "O"
-        
         else:
-            AIPlayer = "O"
-            HumanPlayer = "X"
+            ai_player = "O"
+            human_player = "X"
 
-        return AIPlayer, HumanPlayer
+        return ai_player, human_player
 
-    # Funkcja zawierająca algorytm MiniMax
-    def minimax(self, board, depth, Maximizing, AIPlayer, HumanPlayer):
-        
-        # Sprawdzanie czy kotś wygrał lub zremisował
-        result = self.checkWinner(board)
-        # Jeśli ktoś wygrał lub zremisował zwraca wynik
+    def minimax(self, board, depth, maximizing, ai_player, human_player):
+        '''Metoda zwraca ocene pozycji dla podanej planszy w liście "board"'''
+
+        result = self.get_winner(board)
         if result is not None:
-            if AIPlayer == "O":
+            if ai_player == "O":
                 score = PointsForO[result].value
             else:
                 score = PointsForX[result].value
             return score
 
-        # Algorytm dla gracza maksymalizującego wynik
-        if Maximizing == True:
-            BestScoreMax = float('-inf')
+        if maximizing:
+            best_score_max = float('-inf')
             for maxi in range(9):
                 if board[maxi] == "":
-                    board[maxi] = AIPlayer
-                    score = self.minimax(board, depth + 1, False, AIPlayer, HumanPlayer)
+                    board[maxi] = ai_player
+                    score = self.minimax(board, depth + 1, False, ai_player, human_player)
                     board[maxi] = ""
-                    BestScoreMax = max(score, BestScoreMax)
-            return BestScoreMax
-        
-        #Algorytm dla gracza minimalizującego wynik
-        elif Maximizing == False:
-            BestScoreMin = float('inf')
+                    best_score_max = max(score, best_score_max)
+            return best_score_max
+
+        elif not maximizing:
+            best_score_min = float('inf')
             for mini in range(9):
                 if board[mini] == "":
-                    board[mini] = HumanPlayer
-                    score = self.minimax(board, depth + 1, True, AIPlayer, HumanPlayer)
+                    board[mini] = human_player
+                    score = self.minimax(board, depth + 1, True, ai_player, human_player)
                     board[mini] = ""
-                    BestScoreMin = min(score, BestScoreMin)
-            return BestScoreMin
+                    best_score_min = min(score, best_score_min)
+            return best_score_min
 
-    def best_move(self, board, x_or_o):
+    def get_best_move(self, board, x_or_o):
+        '''Metoda zwraca najlepszy ruch w pozycji, 
+        przyjmuje jako argumenty plansze oraz symbol którym gra AI'''
 
-        result = self.HumanAI(x_or_o)
-        AIPlayer = result[0]
-        HumanPlayer = result[1]
+        result = self.human_ai(x_or_o)
+        ai_player = result[0]
+        human_player = result[1]
+        best_score = float('-inf')
+        move = None
 
-        BestScore = float('-inf')
-        Move = None
-
-        # Sprawdzanie każdego wolnego miejsca i określanie wyniku dla tego miejsca
         for i in range(9):
             if board[i] == "":
-                board[i] = AIPlayer
-                score = self.minimax(board, 0, False, AIPlayer, HumanPlayer)
+                board[i] = ai_player
+                score = self.minimax(board, 0, False, ai_player, human_player)
                 board[i]=""
-                if score>BestScore:
-                    BestScore = score
-                    Move = i
-        return Move+1
+                if score>best_score:
+                    best_score = score
+                    move = i
+        return move+1
 
-    
-    # Funkcja zwracająca True jeżeli planasza jest całą zapełniona
-    def IsBoardFull(self, board):
+    def is_board_full(self, board):
+        '''Funkcja zwraca True jeżeli lista "board" jest pełna'''
         for i in range(9):
             if board[i]=="":
                 return False
         return True
-    
-    # Funkcja sprawdzającza czy ktoś wygrał
-    def checkWinner(self, board):
 
+    def get_winner(self, board):
+        '''Funkcja sprawdza czy ktoś wygrał. Jeśli ktoś wygrał zwraca kto'''
         winner = False
 
         # Poziomo
-        if board[0]!="" and board[0] == board[1] == board[2]:
-            winner = True
-            return board[0]
-        if board[3]!="" and board[3] == board[4] == board[5]:
-            winner = True
-            return board[3]
-        if board[6]!="" and board[6] == board[7] == board[8]:
-            winner = True
-            return board[6]
-        
+        for x in range(0,9,3):
+            if  board[x]!="" and board[x] == board[x+1] == board[x+2]:
+                winner = True
+                return board[x]
         # Pionowo
-        if board[0]!="" and board[0] == board[3] == board[6]:
-            winner = True
-            return board[0]
-        if board[1]!="" and board[1] == board[4] == board[7]:
-            winner = True
-            return board[1]
-        if board[2]!="" and board[2] == board[5] == board[8]:
-            winner = True
-            return board[2]
-        
+        for x in range(3):
+            if board[x]!="" and board[x] == board[x+3] == board[x+6]:
+                winner = True
+                return board[x]
         # Na skos
         if board[0]!="" and board[0] == board[4] == board[8]:
             winner = True
@@ -164,20 +121,20 @@ class MiniMax_AI():
         if board[2]!="" and board[2] == board[4] == board[6]:
             winner = True
             return board[2]
-        
-        if winner==False and self.IsBoardFull(board)==True:
+
+        if not winner and self.is_board_full(board):
             return "Tie"
         else:
-            return None 
+            return None
 
-# Enum zwracające wynik dla każdego z końców gry jeśli gramczem maksymalizującym jest O
 class PointsForO(Enum):
+    '''Enum z wynikami końcówek gry jeśli graczem maksymalizującym jest O'''
     X = -1
     O = 1
     Tie = 0
-
-    # Enum zwracające wynik dla każdego z końców gry jeśli gramczem maksymalizującym jest X
 class PointsForX(Enum):
+    '''Enum z wynikami końcówek gry jeśli graczem maksymalizującym jest O'''
+
     X = 1
     O = -1
     Tie = 0

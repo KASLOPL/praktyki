@@ -1,0 +1,171 @@
+WindowManager:
+    id: window_manager
+
+    LobbyWindow:
+        id: lobby_window
+    MainWindow:
+        id: main_window
+    XorOWindow:
+        id: X_O
+<XorOWindow>:
+    name: 'XorO'    
+
+    MDFloatLayout:
+
+        md_bg_color: 0,0,0,1
+
+        MDLabel:
+            font_size: 40
+            text: "Select your symbol"
+            halign: "center"
+            pos_hint: {"center_y": .7}
+
+        MDGridLayout:
+            size_hint: .5, .3
+            pos_hint: {'center_x': .5, 'center_y': .3}
+            cols: 2
+            rows: 1
+
+            Button:
+                id: btn1
+                text: "X"
+                font_size: "45sp"
+                on_release: 
+                    app.IsAI("X")
+                    root.manager.transition.direction = "left"
+
+            Button:
+                id: btn2
+                text: "O"
+                font_size: "45sp"
+                on_release: 
+                    app.IsAI("O")
+                    root.manager.transition.direction = "left"    
+
+<MainWindow>:
+    name: 'main'
+
+    MDFloatLayout:
+        md_bg_color: 0,0,0,1
+
+        MDGridLayout:
+            size_hint: .5, .5
+            pos_hint: {'center_x': .5, 'center_y': .7}
+            cols: 3
+            rows: 3
+
+            Button:
+                id: btn1
+                text: ""
+                font_size: "45sp"
+                on_release: app.press(btn1, "btn1")
+
+            Button:
+                id: btn2
+                text: ""
+                font_size: "45sp"
+                on_release: app.press(btn2, "btn2")
+
+            Button:
+                id: btn3
+                text: ""
+                font_size: "45sp"
+                on_release: app.press(btn3, "btn3")
+
+            Button:
+                id: btn4
+                text: ""
+                font_size: "45sp"
+                on_release: app.press(btn4, "btn4")
+
+            Button:
+                id: btn5
+                text: ""
+                font_size: "45sp"
+                on_release: app.press(btn5, "btn5")
+
+            Button:
+                id: btn6
+                text: ""
+                font_size: "45sp"
+                on_release: app.press(btn6, "btn6")
+
+            Button:
+                id: btn7
+                text: ""
+                font_size: "45sp"
+                on_release: app.press(btn7, "btn7")
+
+            Button:
+                id: btn8
+                text: ""
+                font_size: "45sp"
+                on_release: app.press(btn8, "btn8")
+
+            Button:
+                id: btn9
+                text: ""
+                font_size: "45sp"
+                on_release: app.press(btn9, "btn9")
+
+        MDLabel:
+            id: score
+            font_size:"32sp"
+            text: "X GOES FIRST!"
+            halign: "center"
+            pos_hint: {"center_y": .3}
+
+        MDRaisedButton:
+            id: restart
+            text: "Restart the game"
+            pos_hint: {'center_x': .5, 'center_y': .2}
+            on_release: app.restart()
+        
+        MDLabel:
+            id: stats
+            font_size: 15
+            text: "X won 0 times | O won 0 times"
+            halign: "center"
+            pos_hint: {"center_y": .1}
+
+        MDLabel:
+            id: stats2
+            font_size: 15
+            text: "X wins: 0% | O wins: 0% | Ties: 0%"
+            halign: "center"
+            pos_hint: {"center_y": .03}   
+
+<LobbyWindow>:
+    name: 'lobby'
+
+    MDFloatLayout:
+
+        md_bg_color: 0,0,0,1
+
+        MDLabel:
+            font_size: 40
+            text: "Select game mode"
+            halign: "center"
+            pos_hint: {"center_y": .7}
+
+        MDGridLayout:
+            size_hint: .5, .3
+            pos_hint: {'center_x': .5, 'center_y': .3}
+            cols: 2
+            rows: 1
+
+            Button:
+                id: btn1
+                text: "PvP"
+                font_size: "45sp"
+                on_release: 
+                    app.press_PvP()
+                    root.manager.transition.direction = "right"
+
+            Button:
+                id: btn2
+                text: "PvE"
+                font_size: "45sp"
+                on_release: 
+                    app.toSelection()
+                    root.manager.transition.direction = "left"

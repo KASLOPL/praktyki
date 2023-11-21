@@ -1,51 +1,55 @@
+from kivy.uix.screenmanager import ScreenManager, Screen
 from kivy.lang import Builder
 from kivymd.app import MDApp
 import mysql.connector
 import AI
-from kivy.uix.screenmanager import ScreenManager, Screen
+
 
 class LobbyWindow(Screen):
-    pass
+    '''Definiowanie okna używanych przez aplikacje'''
 
 class MainWindow(Screen):
-    pass
+    '''Definiowanie okna używanych przez aplikacje'''
+
 
 class WindowManager(ScreenManager):
-    pass
+    '''Definiowanie okna używanych przez aplikacje'''
 
 class XorOWindow(Screen):
-    pass
+    '''Definiowanie okna używanych przez aplikacje'''
 
-# Main klasa
 class Code(MDApp):
+    '''Główna klasa zawierająca funkcje i metody potrzebne do gry'''
 
     def build(self):
         # Ustawienia aplikacji i zwracanie wyglądu z pliku kv
         self.theme_cls.theme_style = "Dark"
         self.theme_cls.primary_palette = "BlueGray"
         return Builder.load_file('style.kv')
-    
-    def toSelection(self):
+
+    def to_selection(self):
+        '''Zmienia wyświetlane okno na XorO'''
+
         self.root.current = "XorO"
 
-    def press_PvP(self):
+    def to_game(self):
+        '''Zmienia wyświetlane okno na XorO'''
+
         self.root.current = "main"
         self.on_load()
 
-    def press_PvE(self):
-        self.root.current = "main"
-        self.on_load()
+    def if_ai(self, x_or_o):
+        ''''''
 
-    def IsAI(self, XorO):
-        self.press_PvE()
-        self.IsBot = True
-        self.PlayerSymbol = XorO
-        if XorO == "X":
-            self.AISymbol = "O"
+        self.to_game()
+        self.is_bot = True
+        self.player_symbol = x_or_o
+        if x_or_o == "X":
+            self.ai_symbol = "O"
         else:
-            self.AISymbol = "X"
+            self.ai_symbol = "X"
 
-        if XorO == "O":
+        if x_or_o == "O":
             self.press("","")
 
     def on_load(self):
@@ -122,11 +126,11 @@ class Code(MDApp):
     # Zmienna do sprawdzania czy jest remis
     tie_q = False
     # Zmienna określająca tryb gry
-    IsBot = False
+    is_bot = False
     # Podczas gry z botrm określa jakim znakiem gra gracz
-    PlayerSymbol = ""
+    player_symbol = ""
 
-    AISymbol = ""
+    ai_symbol = ""
 
     # Funkcja do sprawdzania czy ktoś wygrał
     def checkWinner(self):
@@ -237,7 +241,7 @@ class Code(MDApp):
     def press(self, btn, btn_s):
         # Zmienić na onButtonClick
 
-        if self.IsBot == False:
+        if self.is_bot == False:
 
             # Ten if powoduje pojawienie się X lub O i wyłączanie przycisków po ich naciśnięciu
             if self.turn =="X":
@@ -253,7 +257,7 @@ class Code(MDApp):
                 self.root.ids.main_window.ids.score.text = "X's Turn!"
                 self.turn = "X"
         else:
-            if self.turn =="X" and self.turn == self.PlayerSymbol:
+            if self.turn =="X" and self.turn == self.player_symbol:
                 
                 # Przesyłanie które pole zostało kliknięte do pliku AI
                 AI.Data().data(btn_s, "X")
@@ -262,19 +266,19 @@ class Code(MDApp):
                 btn.disabled = True
                 self.root.ids.main_window.ids.score.text = "O's Turn!"
                 self.turn = "O"
-            elif self.turn =="X" and self.turn != self.PlayerSymbol:
-                move = AI.Data().move("O")
+            elif self.turn =="X" and self.turn != self.player_symbol:
+                move = AI.Data().move("X")
                 self.PressByAI(move)
                 self.turn= "O"
 
-            elif self.turn =="O" and self.turn != self.PlayerSymbol:
+            elif self.turn =="O" and self.turn != self.player_symbol:
 
                 # Wywołanie ruchu wykonywanego przez AI
-                move = AI.Data().move("X")
+                move = AI.Data().move("O")
                 self.PressByAI(move)
                 self.turn= "X"
             
-            elif self.turn =="O" and self.turn == self.PlayerSymbol:
+            elif self.turn =="O" and self.turn == self.player_symbol:
                 # Przesyłanie które pole zostało kliknięte do pliku AI
                 AI.Data().data(btn_s, "O")
 
@@ -286,37 +290,37 @@ class Code(MDApp):
         # Nastęne akcje
         self.checkWinner()
         self.root.md_bg_color= 0,0,0,1
-        if self.turn !=self.PlayerSymbol and self.winner == False and self.tie_q == False and self.IsBot== True:
+        if self.turn !=self.player_symbol and self.winner == False and self.tie_q == False and self.is_bot== True:
             self.press("","")
 
     # Zmiana liczby na id przycisku
     def PressByAI(self, btn):
         if btn==1:
-            self.root.ids.main_window.ids.btn1.text = self.AISymbol
+            self.root.ids.main_window.ids.btn1.text = self.ai_symbol
             self.root.ids.main_window.ids.btn1.disabled = True
         elif btn==2:
-            self.root.ids.main_window.ids.btn2.text = self.AISymbol
+            self.root.ids.main_window.ids.btn2.text = self.ai_symbol
             self.root.ids.main_window.ids.btn2.disabled = True
         elif btn==3:
-            self.root.ids.main_window.ids.btn3.text = self.AISymbol
+            self.root.ids.main_window.ids.btn3.text = self.ai_symbol
             self.root.ids.main_window.ids.btn3.disabled = True
         elif btn==4:
-            self.root.ids.main_window.ids.btn4.text = self.AISymbol
+            self.root.ids.main_window.ids.btn4.text = self.ai_symbol
             self.root.ids.main_window.ids.btn4.disabled = True
         elif btn==5:
-            self.root.ids.main_window.ids.btn5.text = self.AISymbol
+            self.root.ids.main_window.ids.btn5.text = self.ai_symbol
             self.root.ids.main_window.ids.btn5.disabled = True
         elif btn==6:
-            self.root.ids.main_window.ids.btn6.text = self.AISymbol
+            self.root.ids.main_window.ids.btn6.text = self.ai_symbol
             self.root.ids.main_window.ids.btn6.disabled = True
         elif btn==7:
-            self.root.ids.main_window.ids.btn7.text = self.AISymbol
+            self.root.ids.main_window.ids.btn7.text = self.ai_symbol
             self.root.ids.main_window.ids.btn7.disabled = True
         elif btn==8:
-            self.root.ids.main_window.ids.btn8.text = self.AISymbol
+            self.root.ids.main_window.ids.btn8.text = self.ai_symbol
             self.root.ids.main_window.ids.btn8.disabled = True
         elif btn==9:
-            self.root.ids.main_window.ids.btn9.text = self.AISymbol
+            self.root.ids.main_window.ids.btn9.text = self.ai_symbol
             self.root.ids.main_window.ids.btn9.disabled = True
 
         self.turn="X"
@@ -370,7 +374,7 @@ class Code(MDApp):
         self.winner = False
         self.tie_q = False
 
-        if self.IsBot == True and self.AISymbol == "X":
+        if self.is_bot == True and self.ai_symbol == "X":
             self.press("", "")
 
 if __name__=="__main__":

@@ -14,11 +14,14 @@ class Data():
     # Funkcja przypisująca wykonane ruchy do tablicy board
     def writing(self, move, x_o):
         self.board[move-1] = x_o
+        print(self.board)
 
     # Funkcja wywołująca funkcje która zwraca na którym polu ma zostać postawiony znak
     def move(self, x_or_o):
+        print(x_or_o)
         move = MiniMax_AI().best_move(self.board, x_or_o)
         self.board[move-1]= x_or_o
+        print(self.board)
         return move
 
     # Funkcja resetująca tablice "board"
@@ -82,7 +85,7 @@ class MiniMax_AI():
             BestScoreMax = float('-inf')
             for maxi in range(9):
                 if board[maxi] == "":
-                    board[maxi] = HumanPlayer
+                    board[maxi] = AIPlayer
                     score = self.minimax(board, depth + 1, False, AIPlayer, HumanPlayer)
                     board[maxi] = ""
                     BestScoreMax = max(score, BestScoreMax)
@@ -93,7 +96,7 @@ class MiniMax_AI():
             BestScoreMin = float('inf')
             for mini in range(9):
                 if board[mini] == "":
-                    board[mini] = AIPlayer
+                    board[mini] = HumanPlayer
                     score = self.minimax(board, depth + 1, True, AIPlayer, HumanPlayer)
                     board[mini] = ""
                     BestScoreMin = min(score, BestScoreMin)

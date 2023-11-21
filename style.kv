@@ -31,7 +31,7 @@ WindowManager:
                 text: "X"
                 font_size: "45sp"
                 on_release: 
-                    app.IsAI("X")
+                    app.if_ai("X")
                     root.manager.transition.direction = "left"
 
             Button:
@@ -39,7 +39,7 @@ WindowManager:
                 text: "O"
                 font_size: "45sp"
                 on_release: 
-                    app.IsAI("O")
+                    app.if_ai("O")
                     root.manager.transition.direction = "left"    
 
 <MainWindow>:
@@ -159,7 +159,7 @@ WindowManager:
                 text: "PvP"
                 font_size: "45sp"
                 on_release: 
-                    app.press_PvP()
+                    app.to_game()
                     root.manager.transition.direction = "right"
 
             Button:
@@ -167,5 +167,5 @@ WindowManager:
                 text: "PvE"
                 font_size: "45sp"
                 on_release: 
-                    app.toSelection()
+                    app.to_selection()
                     root.manager.transition.direction = "left"

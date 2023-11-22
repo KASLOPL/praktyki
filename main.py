@@ -22,7 +22,6 @@ class Code(MDApp):
     '''Główna klasa zawierająca funkcje i metody potrzebne do gry'''
 
     def build(self):
-        # Ustawienia aplikacji i zwracanie wyglądu z pliku kv
         self.theme_cls.theme_style = "Dark"
         self.theme_cls.primary_palette = "BlueGray"
         return Builder.load_file('style.kv')

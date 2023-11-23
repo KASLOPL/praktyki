@@ -82,7 +82,7 @@ class MiniMaxAI():
         best_score = float('-inf')
         move = None
 
-        for i in range(9):
+        for i in range(0,9):
             if board[i] == "":
                 board[i] = ai_player
                 score = self.minimax(board, 0, False, ai_player, human_player)

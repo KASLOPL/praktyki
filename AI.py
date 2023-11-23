@@ -1,36 +1,36 @@
 from enum import Enum
 
 class Data():
-    '''class Data() recives data from main file'''
+    #*class Data() recives data from main file
 
     # Tablica z całą planszą
     board = ["", "", "", "", "", "", "", "", ""]
 
     def data(self, btn_s, x_o):
-        '''Metoda zapisuje ruch gracza do listy'''
+        #*Metoda zapisuje ruch gracza do listy
         move = self.switch(btn_s)
         self.board[move-1] = x_o
 
     def move(self, x_or_o):
-        '''Metoda wywołuje Klase MiniMax i zapisująca ruch do listy'''
+        #*Metoda wywołuje Klase MiniMax i zapisująca ruch do listy
         move = MiniMaxAI().get_best_move(self.board, x_or_o)
         self.board[move-1]= x_or_o
         return move
 
     def restart(self):
-        '''Metoda czyści tablice z planszą'''
+        #*Metoda czyści tablice z planszą
         for x in range(9):
             self.board[x]= ""
 
     def switch(self, btn):
-        '''Metoda zwraca id przycisku na podstawie stringa np: btn3 zwraca 3'''
+        #*Metoda zwraca id przycisku na podstawie stringa np: btn3 zwraca 3
         return int(btn[3])
 
 class MiniMaxAI():
-    '''Klasa zawierająca metody które zwracają najlepszy ruch w danej pozycji'''
+    #*Klasa zawierająca metody które zwracają najlepszy ruch w danej pozycji
 
     def human_ai(self, x_or_o):
-        '''Metoda zwraca symbol którym gra grasz oraz którym gra AI'''
+        #*Metoda zwraca symbol którym gra grasz oraz którym gra AI
 
         if x_or_o == "X":
             ai_player = "X"
@@ -43,7 +43,7 @@ class MiniMaxAI():
         return ai_player, human_player
 
     def minimax(self, board, depth, maximizing, ai_player, human_player):
-        '''Metoda zwraca ocene pozycji dla podanej planszy w liście "board"'''
+        #*Metoda zwraca ocene pozycji dla podanej planszy w liście "board"
 
         result = self.get_winner(board)
         if result is not None:
@@ -62,8 +62,7 @@ class MiniMaxAI():
                     board[maxi] = ""
                     best_score_max = max(score, best_score_max)
             return best_score_max
-
-        elif not maximizing:
+        else:
             best_score_min = float('inf')
             for mini in range(9):
                 if board[mini] == "":
@@ -74,8 +73,8 @@ class MiniMaxAI():
             return best_score_min
 
     def get_best_move(self, board, x_or_o):
-        '''Metoda zwraca najlepszy ruch w pozycji, 
-        przyjmuje jako argumenty plansze oraz symbol którym gra AI'''
+        #*Metoda zwraca najlepszy ruch w pozycji, 
+        #*przyjmuje jako argumenty plansze oraz symbol którym gra AI
 
         result = self.human_ai(x_or_o)
         ai_player = result[0]
@@ -83,7 +82,7 @@ class MiniMaxAI():
         best_score = float('-inf')
         move = None
 
-        for i in range(9):
+        for i in range(0,9):
             if board[i] == "":
                 board[i] = ai_player
                 score = self.minimax(board, 0, False, ai_player, human_player)
@@ -94,14 +93,14 @@ class MiniMaxAI():
         return move+1
 
     def is_board_full(self, board):
-        '''Funkcja zwraca True jeżeli lista "board" jest pełna'''
+        #*Funkcja zwraca True jeżeli lista "board" jest pełna
         for i in range(9):
             if board[i]=="":
                 return False
         return True
 
     def get_winner(self, board):
-        '''Funkcja sprawdza czy ktoś wygrał. Jeśli ktoś wygrał zwraca kto'''
+        #*Funkcja sprawdza czy ktoś wygrał. Jeśli ktoś wygrał zwraca kto
         winner = False
 
         # Poziomo
@@ -128,13 +127,12 @@ class MiniMaxAI():
             return None
 
 class PointsForO(Enum):
-    '''Enum z wynikami końcówek gry jeśli graczem maksymalizującym jest O'''
+    #*Enum z wynikami końcówek gry jeśli graczem maksymalizującym jest O
     X = -1
     O = 1
     Tie = 0
 class PointsForX(Enum):
-    '''Enum z wynikami końcówek gry jeśli graczem maksymalizującym jest O'''
-
+    #*Enum z wynikami końcówek gry jeśli graczem maksymalizującym jest O
     X = 1
     O = -1
     Tie = 0

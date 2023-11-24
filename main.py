@@ -6,28 +6,29 @@ import AI
 
 
 class LobbyWindow(Screen):
-    #*Definiowanie okna używanych przez aplikacje
+    '''#*Definiowanie okna używanych przez aplikacje'''
     pass
 
 class MainWindow(Screen):
-    #*Definiowanie okna używanych przez aplikacje
+    '''#*Definiowanie okna używanych przez aplikacje'''
     pass
 
 class WindowManager(ScreenManager):
-    #*Definiowanie okna używanych przez aplikacje
+    '''#*Definiowanie okna używanych przez aplikacje'''
     pass
 
 class XorOWindow(Screen):
-    #*Definiowanie okna używanych przez aplikacje
+    '''#*Definiowanie okna używanych przez aplikacje'''
     pass
 
 class Code(MDApp):
-    #*Główna klasa zawierająca funkcje i metody potrzebne do gry
+    '''#*Główna klasa zawierająca funkcje i metody potrzebne do gry'''
 
     data_base = mysql.connector.connect(host="localhost", user="root", password="", database="kolko_wyniki")
     my_cursor=data_base.cursor()
     
     def site_connection(self):
+        '''Pomocnik'''
         return self.root.ids.main_window.ids
 
     def build(self):
@@ -36,18 +37,18 @@ class Code(MDApp):
         return Builder.load_file('style.kv')
 
     def to_selection(self):
-        #*Zmienia wyświetlane okno na XorO
+        '''#*Zmienia wyświetlane okno na XorO'''
 
         self.root.current = "XorO"
 
     def to_game(self):
-        #*Zmienia wyświetlane okno na XorO
+        '''#*Zmienia wyświetlane okno na XorO'''
 
         self.root.current = "main"
         self.on_load()
 
     def if_ai(self, x_or_o):
-        #*Metoda zmienia zmienne przechowywujace symbole AI i gracza
+        '''#*Metoda zmienia zmienne przechowywujace symbole AI i gracza'''
 
         self.to_game()
         self.is_bot = True
@@ -61,12 +62,12 @@ class Code(MDApp):
             self.on_press("","")
 
     def on_load(self):
-        #*Metoda aktualizuje statysyki
+        '''#*Metoda aktualizuje statysyki'''
         self.stats_1()
         self.stats_2()
 
     def stats_1(self):
-        #*Metoda wypisuje pierwsze statystyki na ekran
+        '''#*Metoda wypisuje pierwsze statystyki na ekran'''
         select_query_x="select count(id_meczu) from wyniki where wynik=1"
         select_query_o="select count(id_meczu) from wyniki where wynik=0"
 
@@ -80,7 +81,7 @@ class Code(MDApp):
         self.site_connection().stats.text=f"X won {resultx[0]} times | O won {resulto[0]} times"
 
     def stats_2(self):
-        #*Metoda wypisuje drugie statystyki na ekran
+        '''#*Metoda wypisuje drugie statystyki na ekran'''
 
         count_id="select count(id_meczu) from wyniki"
         count_x="select count(id_meczu) from wyniki where wynik=1"
@@ -119,7 +120,7 @@ class Code(MDApp):
     ai_symbol = ""
 
     def check_winner(self):
-        #*Metoda sprawdza czy ktoś mecz się zakończył
+        '''#*Metoda sprawdza czy ktoś mecz się zakończył'''
 
         # Poziomo
         if self.site_connection().btn1.text != "" and self.site_connection().btn1.text == self.site_connection().btn2.text and self.site_connection().btn2.text == self.site_connection().btn3.text:
@@ -151,7 +152,7 @@ class Code(MDApp):
         self.tie()
 
     def tie(self):
-        #*Metoda sprawdza czy i wykonuje akcje związane z remisem
+        '''#*Metoda sprawdza czy i wykonuje akcje związane z remisem'''
         if not self.winner and self.site_connection().btn1.text != ""\
         and self.site_connection().btn2.text != ""\
         and self.site_connection().btn3.text != ""\
@@ -170,7 +171,7 @@ class Code(MDApp):
             self.data_base.commit()
 
     def end_game(self, a, b, c):
-        #*Metoda kończąca grę, przyjmuje jako argumenty 3 przyciski które są w wygranym rzędzie
+        '''#*Metoda kończąca grę, przyjmuje jako argumenty 3 przyciski które są w wygranym rzędzie'''
         self.winner = True
         a.color = "red"
         b.color = "red"
@@ -192,7 +193,7 @@ class Code(MDApp):
         self.stats_2()
 
     def on_press(self, btn, btn_s):
-        #*Metoda wywoływana klknięciem w przycisk, przyjmuje jako argumenty id klikniętego przycisku
+        '''#*Metoda wywoływana klknięciem w przycisk, przyjmuje jako argumenty id klikniętego przycisku'''
         if not self.is_bot:
             if self.turn =="X":
                 btn.text = "X"
@@ -237,12 +238,12 @@ class Code(MDApp):
             self.on_press("","")
 
     def press_by_ai(self, btn):
-        #*Metoda wciska przycisk wybrany przez AI
+        '''#*Metoda wciska przycisk wybrany przez AI'''
         self.site_connection()["btn"+str(btn)].text = self.ai_symbol
         self.site_connection()["btn"+str(btn)].disabled = True
 
     def all_buttons(self, action, value):
-        #*Metoda zmienia podną właściwość dla wszystkich przycisków
+        '''#*Metoda zmienia podną właściwość dla wszystkich przycisków'''
         if action == "disabled":
             for i in range(1,10):
                 btn = "btn"+str(i)
@@ -257,7 +258,7 @@ class Code(MDApp):
                 self.site_connection()[btn].text = value
 
     def restart(self):
-        #*Metoda wykonuje wszystkie akcje związane z resetoowaniem gry
+        '''#*Metoda wykonuje wszystkie akcje związane z resetoowaniem gry'''
         AI.Data().restart()
         self.turn = "X"
 
